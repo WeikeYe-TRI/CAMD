@@ -280,28 +280,31 @@ class AtomateExperiment(Experiment):
             None
         """
         self.update_current_data(data)
-        new_columns = [
-            "wf_spec",
-            "wf_name",
-            "fw_id",
-            "task_id",
-            "launch_id",
-            "wf_status",  # status of the workflow (ready, waiting, running, fizzeld, completed)
-            "task_status",  # status of the task (successful, failed)
-            "output",
-            "input",
-            "task_dir",
-            "calcs_reversed",
-            "final_structure",
-            "final_energy_per_atom",
-            "delta_e",  # formation energy per atom
-        ]
-        for new_column in new_columns:
-            self.current_data[new_column] = None
-        self.add_wfs()
-        if self.launch_from_local:
-            self.launch()
-        self.job_status = "PENDING"
+        if 'wf_name' in self.current_data.columns:
+            self.update_results()
+        else:
+            new_columns = [
+                "wf_spec",
+                "wf_name",
+                "fw_id",
+                "task_id",
+                "launch_id",
+                "wf_status",  # status of the workflow (ready, waiting, running, fizzeld, completed)
+                "task_status",  # status of the task (successful, failed)
+                "output",
+                "input",
+                "task_dir",
+                "calcs_reversed",
+                "final_structure",
+                "final_energy_per_atom",
+                "delta_e",  # formation energy per atom
+            ]
+            for new_column in new_columns:
+                self.current_data[new_column] = None
+            self.add_wfs()
+            if self.launch_from_local:
+                self.launch()
+            self.job_status = "PENDING"
         return self.job_status
 
     def add_wfs(self):

@@ -266,12 +266,13 @@ class AnalyzeStructures(AnalyzerBase):
         self.structures = []
         self.energies = []
         for j, r in jobs.iterrows():
-            if r["status"] == "SUCCEEDED":
+            if r["task_status"] == "successful":
                 # This is a switch for OQMD vs. MP
                 if "output" in r:
-                    final_structure = r["output"]["structure"]
+                    output = json.loads(r["output"])
+                    final_structure = output["structure"]
                     self.structures.append(final_structure)
-                    self.energies.append(r["output"]["energy_per_atom"])
+                    self.energies.append(output["energy_per_atom"])
                     self.structure_ids.append(j)
                 else:
                     final_structure = r["result"].final_structure
@@ -405,7 +406,8 @@ class StabilityAnalyzer(AnalyzerBase):
         new_comp = new_experimental_results["Composition"].sum()
         new_experimental_results = new_experimental_results.dropna(subset=["delta_e"])
         if not finalize:
-            new_seed = campaign.seed_data.append(new_experimental_results)
+            #new_seed = campaign.seed_data.append(new_experimental_results)
+            new_seed = pd.concat([campaign.seed_data, new_experimental_results], axis=0)
         else:
             new_seed = campaign.seed_data
 

@@ -77,7 +77,8 @@ if __name__ == "__main__":
     NOW = datetime.now().isoformat()
     seed_data = load_seed()
     #exp_data = load_candidate(CHEMSYS)
-    exp_data = load_candidate(m3gnet=True)
+    exp_data = load_candidate(m3gnet=False)
+    import pdb; pdb.set_trace()
     if not os.path.isfile("candidate.pickle"):
         exp_data.to_pickle("candidate.pickle")
     model = M3GNet(is_intensive=False)
